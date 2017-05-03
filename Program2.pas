@@ -1,34 +1,37 @@
 Uses GraphAbc;
-//Шаблон программы на основе движка AntsLive
-//Создано по заказу Вадима Аза
 var
   map: array[1..500] of array[1..500] of array[1..2] of integer;
-//Двуслойный массив карты. Работу осуществлять ТОЛЬКО во втором слоe(map[x][y][2])
+
 var
-  antx, anty, anttime: array of integer;
+  foodx, foody, foodtrue: array[1..50] of integer;
+
+var
+  antx, anty, anttime, antpriory: array of integer;
 
 var
   antcount: integer;
 
 var
-  i, ii, x, y: integer;
-//переменные для непосредственного обновления экрана
+  i, ii, x, y, matkax, matkay: integer;
+
 begin
   randomize();
-  antcount := 2500;
-  
+  readln(antcount);
+  matkax := random(1, 492);
+  matkay := random(1, 492);
   SetLength(antx, antcount);
   SetLength(anty, antcount);
   SetLength(anttime, antcount);
-  //Заполение всего экрана замлёй
-  for i:=1 to antcount-1 do
+  SetLength(antpriory, antcount);
+  
+  for i := 1 to antcount - 1 do
   begin
-  x := random(1, 500);
-  y := random(1, 500);
-  antx[i] := x;
-  anty[i] := y;
-  map[antx[i]][anty[i]][2] := 1;
-  anttime[i] := random(250, 1000);
+    x := random(1, 500);
+    y := random(1, 500);
+    antx[i] := x;
+    anty[i] := y;
+    map[antx[i]][anty[i]][2] := 1;
+    anttime[i] := random(250, 1000);
   end;
   for i := 1 to 500 do
   begin
@@ -39,18 +42,49 @@ begin
   end;
   repeat
     //обновление экрана
-    
-    for i := 1 to antcount-1 do
+    for i := 1 to 8 do
     begin
-      x:=random(-1,1);
-      y:=random(-1,1);
+      for ii := 1 to 8 do
+      begin
+        map[matkax + ii][matkay + i][2] := 6;
+      end;
+    end;
+    for i := 1 to antcount - 1 do
+    
+    begin
+      map[antx[i]][anty[i]][2] := 1;
+      if antpriory[i] = 0 then
+      begin
+      if antx[i]<matkax-9 then x:=x-1;
+      if antx[i]>matkax+9 then x:=x+1;
+      if anty[i]<matkay-9 then y:=y-1;
+      if anty[i]>matkay+9 then y:=y+1;
+      
+      if antx[i]<=matkax+9 then if anty[i]<=matkay+9 then antpriory[i]:=1;
+      if antx[i]<=matkax+9 then if anty[i]>=matkay-9 then antpriory[i]:=1;
+      if antx[i]<=matkax+9 then if anty[i]<=matkay+9 then antpriory[i]:=1;
+      if antx[i]<=matkax+9 then if anty[i]>=matkay-9 then antpriory[i]:=1;
+      
+      if antx[i]>=matkax-9 then if anty[i]<=matkay+9 then antpriory[i]:=1;
+      if antx[i]>=matkax-9 then if anty[i]>=matkay-9 then antpriory[i]:=1;
+      if antx[i]>=matkax-9 then if anty[i]<=matkay+9 then antpriory[i]:=1;
+      if antx[i]>=matkax-9 then if anty[i]>=matkay-9 then antpriory[i]:=1;
+      
+    
+      end;
+      if antpriory[i] = 1 then
+      begin
+      x := random(-1, 1);
+      y := random(-1, 1);
+      end;
       if antx[i] <= 5 then if x <= 0 then x := 1;
         if anty[i] <= 5 then if y <= 0 then y := 1;
         if antx[i] >= 495 then if x >= 0 then x := -1;
         if anty[i] >= 495 then if y >= 0 then y := -1;
-        map[antx[i]][anty[i]][2]:=2;
+        map[antx[i]][anty[i]][2] := 2;
       antx[i] := antx[i] + x;    
       anty[i] := anty[i] + y;
+      
     end;
     for i := 1 to 500 do
     begin
@@ -61,10 +95,11 @@ begin
           case map[i][ii][2] of
             //вот тут прикреплять свои цвета для обьектов
             1: setpixel(i, ii, clBlack); 
-            2: setpixel(i, ii, clRed);
+            2: setpixel(i, ii, clFireBrick);
             3: setpixel(i, ii, clWhite);
             4: setpixel(i, ii, clGreen);
-            5: setpixel(i, ii, clFireBrick);
+            5: setpixel(i, ii, clIndianRed);
+            6: setpixel(i, ii, clBlack);
           end;
         end;
         map[i][ii][1] := map[i][ii][2];
@@ -73,6 +108,7 @@ begin
     
     SetLength(antx, antcount);
     SetLength(anty, antcount);
-  SetLength(anttime, antcount);
+    SetLength(anttime, antcount);
+    SetLength(antpriory, antcount);
   until 2 = 3;
 end.
