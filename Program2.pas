@@ -26,8 +26,8 @@ begin
   
   for i := 1 to antcount - 1 do
   begin
-    x := random(1, 500);
-    y := random(1, 500);
+    x := random(5, 490);
+    y := random(5, 490);
     antx[i] := x;
     anty[i] := y;
     map[antx[i]][anty[i]][2] := 1;
@@ -49,42 +49,32 @@ begin
         map[matkax + ii][matkay + i][2] := 6;
       end;
     end;
-    for i := 1 to antcount - 1 do
+    for i := 1 to antcount -1 do
     
     begin
-      map[antx[i]][anty[i]][2] := 1;
+    
       if antpriory[i] = 0 then
       begin
-      if antx[i]<matkax-9 then x:=x-1;
-      if antx[i]>matkax+9 then x:=x+1;
-      if anty[i]<matkay-9 then y:=y-1;
-      if anty[i]>matkay+9 then y:=y+1;
+      if antx[i]<matkax-9 then x:=1;
+      if antx[i]>matkax+9 then x:=-1;
+      if anty[i]<matkay-9 then y:=1;
+      if anty[i]>matkay+9 then y:=-1;
+      if antx[i]<=matkax+9 then if antx[i]>=matkax-9 then if anty[i]>=matkay-9 then if anty[i]<=matkay+9 then antpriory[i]:=1;
       
-      if antx[i]<=matkax+9 then if anty[i]<=matkay+9 then antpriory[i]:=1;
-      if antx[i]<=matkax+9 then if anty[i]>=matkay-9 then antpriory[i]:=1;
-      if antx[i]<=matkax+9 then if anty[i]<=matkay+9 then antpriory[i]:=1;
-      if antx[i]<=matkax+9 then if anty[i]>=matkay-9 then antpriory[i]:=1;
-      
-      if antx[i]>=matkax-9 then if anty[i]<=matkay+9 then antpriory[i]:=1;
-      if antx[i]>=matkax-9 then if anty[i]>=matkay-9 then antpriory[i]:=1;
-      if antx[i]>=matkax-9 then if anty[i]<=matkay+9 then antpriory[i]:=1;
-      if antx[i]>=matkax-9 then if anty[i]>=matkay-9 then antpriory[i]:=1;
-      
-    
       end;
       if antpriory[i] = 1 then
       begin
       x := random(-1, 1);
       y := random(-1, 1);
       end;
-      if antx[i] <= 5 then if x <= 0 then x := 1;
-        if anty[i] <= 5 then if y <= 0 then y := 1;
-        if antx[i] >= 495 then if x >= 0 then x := -1;
-        if anty[i] >= 495 then if y >= 0 then y := -1;
-        map[antx[i]][anty[i]][2] := 2;
-      antx[i] := antx[i] + x;    
-      anty[i] := anty[i] + y;
-      
+        if antx[i] < 5 then if x <= 0 then x := 1;
+        if anty[i] < 5 then if y <= 0 then y := 1;
+        if antx[i] > 495 then if x >= 0 then x := -1;
+        if anty[i] > 495 then if y >= 0 then y := -1;
+        
+      if x<>0 then antx[i] := antx[i] + x;    
+      if y<>0 then anty[i] := anty[i] + y;
+     map[antx[i]][anty[i]][2] := 2;
     end;
     for i := 1 to 500 do
     begin
